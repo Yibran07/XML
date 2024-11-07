@@ -11,19 +11,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  *
  * @author Dell
  */
-@WebServlet(name = "VerXMLServlet", urlPatterns = {"/ver_xml_servlet"})
-public class VerXMLServlet extends HttpServlet {
+@WebServlet(name = "ProcesarDatosServlet", urlPatterns = {"/procesar_datos_servlet"})
+public class ProcesarDatosServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +36,10 @@ public class VerXMLServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet VerXMLServlet</title>");
+            out.println("<title>Servlet ProcesarDatosServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet VerXMLServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProcesarDatosServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,33 +57,7 @@ public class VerXMLServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Ruta del archivo XML
-        File xmlFile = new File("C://Users/Dell/books.xml");
-        try {
-
-            // Leer el archivo XML
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(xmlFile);
-            document.getDocumentElement().normalize();
-
-            // Obtener los elementos del XML
-            Element root = document.getDocumentElement();
-            String nombre = root.getElementsByTagName("Nombre").item(0).getTextContent();
-            String email = root.getElementsByTagName("Email").item(0).getTextContent();
-            String telefono = root.getElementsByTagName("Telefono").item(0).getTextContent();
-
-            // Pasar los datos como atributos de la solicitud
-            request.setAttribute("nombre", nombre);
-            request.setAttribute("email", email);
-            request.setAttribute("telefono", telefono);
-
-            // Redirigir a ver_datos_xml.jsp
-            request.getRequestDispatcher("/jsp/ver_datos_xml.jsp").forward(request, response);
-
-        } catch (Exception e) {
-            response.getWriter().println("Error al leer el archivo XML: " + e.getMessage());
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -100,10 +68,24 @@ public class VerXMLServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
+     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Obtener los datos del formulario
+        String nombre = request.getParameter("nombre");
+        String email = request.getParameter("email");
+        String telefono = request.getParameter("telefono");
+
+        // Establecer los datos como atributos para que estén disponibles en la JSP
+        request.setAttribute("nombre", nombre);
+        request.setAttribute("email", email);
+        request.setAttribute("telefono", telefono);
+        
+        // Establecer xmlGenerado a false (aún no se generó el XML)
+        request.getSession().setAttribute("xmlGenerado", false);
+
+        // Redirigir a mostrar_datos.jsp para mostrar los datos del formulario
+        request.getRequestDispatcher("/jsp/mostrar_datos.jsp").forward(request, response);
     }
 
     /**

@@ -39,9 +39,12 @@
                     </form>
 
                     <!-- Formulario para ver el XML -->
-                    <form action="${pageContext.request.contextPath}/ver_xml_servlet" method="get" >
-                        <button type="submit" id="verXmlButton" <c:if test="${xmlGenerado == false}">disabled</c:if>>Ver XML</button>
-
+                    <form action="${pageContext.request.contextPath}/ver_xml_servlet" method="get">
+                        <!-- Se deshabilita el botón si xmlGenerado es falso -->
+                        <button type="submit" id="verXmlButton" 
+                                <c:if test="${xmlGenerado == false}">disabled</c:if>>
+                            Ver XML
+                        </button>
                     </form>
                 </td>
             </tr>

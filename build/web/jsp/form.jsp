@@ -5,7 +5,7 @@
     <title>Formulario</title>
 </head>
 <body>
-    <form action="${pageContext.request.contextPath}/crear_xml_servlet" method="post">
+    <form action="${pageContext.request.contextPath}/procesar_datos_servlet" method="post">
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre"><br><br>
 

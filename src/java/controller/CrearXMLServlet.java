@@ -87,13 +87,6 @@ public class CrearXMLServlet extends HttpServlet {
         String email = request.getParameter("email");
         String telefono = request.getParameter("telefono");
         
-        Boolean xmlGenerado = (Boolean) request.getSession().getAttribute("xmlGenerado");
-if (xmlGenerado == null || !xmlGenerado) {
-    // Genera el XML
-    // Luego marca como generado
-    request.getSession().setAttribute("xmlGenerado", true);
-}
-
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -122,6 +115,9 @@ if (xmlGenerado == null || !xmlGenerado) {
             File file = new File("C://Users/Dell/books.xml");
             StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
+            
+            // Establecer xmlGenerado en la sesión como true
+            request.getSession().setAttribute("xmlGenerado", true);
 
             // Pasar los datos a la página JSP
             request.setAttribute("nombre", nombre);
@@ -131,6 +127,8 @@ if (xmlGenerado == null || !xmlGenerado) {
 
             // Redireccionar a mostrar_datos.jsp
             request.getRequestDispatcher("/jsp/mostrar_datos.jsp").forward(request, response);
+            
+
 
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
